@@ -1,0 +1,175 @@
+<html>
+<body><br>
+<div class="card-box">
+    <div class="row">
+        <div class="col-lg-3 offset-1">
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+    Add New
+  </button>
+</div>
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Add/Edit Student Details</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <form [formGroup]="studentform" (ngSubmit)="savestudent()" enctype="multipart/form-data">
+                <br>
+                <div class="row">
+                  <div class="col-lg-5">
+                  <div class="form-group">
+                    <label>Roll No</label>
+                    <input type="text" class="form-control" formControlName="roll" />
+                    <span *ngIf="roll && roll.invalid && roll.touched" class="error">
+                        <span *ngIf="roll?.errors?.['required']">Please enter Student Roll No.</span>
+                        <span *ngIf="roll?.errors?.['pattern']">Invalid format of roll no</span>
+                    </span> 
+                  </div>
+                </div>
+                <div class="col-lg-5 offset-1">
+                    <div class="form-group">
+                      <label>Name</label>
+                      <input type="text" class="form-control" formControlName="name" />
+                      <span *ngIf="name && name.invalid && name.touched" class="error">
+                        <span *ngIf="name?.errors?.['required']">Please enter Student name</span>
+                        <span *ngIf="name?.errors?.['pattern']">Name must be in string</span>
+                    </span> 
+                    </div>
+                  </div>
+                </div>
+
+                <br>
+
+                <div class="row">
+                    <div class="col-lg-5">
+                    <div class="form-group">
+                      <label>Subject Name</label>
+                      <input type="text" class="form-control" formControlName="subject" />
+                      <span *ngIf="subject && subject.invalid && subject.touched" class="error">
+                        <span *ngIf="subject?.errors?.['required']">Please enter subject name</span>
+                        <span *ngIf="subject?.errors?.['pattern']">Subject name must be in alphanumerals</span>
+                    </span> 
+                    </div>
+                  </div>
+                  <div class="col-lg-5 offset-1"><br>
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" formControlName="practical" (change)="practicalchecked($event.target)"/>
+                          <label class="form-check-label">Is Practical</label>
+                    </div>
+                    </div>
+                  </div>
+
+                  <br>
+                  <div class="row">
+                    <div class="col-lg-5">
+                    <div class="form-group">
+                      <label>Theory</label>
+                      <input type="text" class="form-control" formControlName="theory" (change)="checkrange($event.target)"/>
+                      <span *ngIf="theory && theory.invalid && theory.touched" class="error">Please specify the mark</span>
+                    </div>
+                  </div>
+                  <div class="col-lg-5 offset-1">
+                    <div class="form-group">
+                        <label>Practical</label>
+                        <input type="text" class="form-control" formControlName="practicalmark" />
+                      </div>
+                    </div>
+                  </div>
+
+                  <br>
+                  <div class="row">
+                    <div class="col-lg-4 offset-5">
+                    <button type="button" (click)="saveformdata()" class="btn btn-primary">Save</button>          
+                  </div>
+                </div>
+            </form>
+
+            <br><br>
+            <div class="row">
+              <div class="table-responsive">
+                  <table class="table table-bordered" id="marktable" role="grid" >
+                      <thead class="bg-primary text-white">
+                          <tr role="row">
+                              <th>S.No</th>
+                              <th>Name</th>
+                              <th>Theory</th>
+                              <th>Practical</th>
+                              <th>Total</th>
+                              <th>Action</th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                          <tr *ngFor="let student of studservice.formdata;index as i">
+                              <td>{{i+1}}</td>
+                              <td>{{student.subject}}</td>
+                              <td>{{student.theory}}</td>
+                              <td>{{student.practicalmark}}</td>
+                              <td>{{calc(student.theory,student.practicalmark)}}</td>
+                              <td><button  class="btn btn-danger">Delete</button>
+                                  </td> 
+                          </tr>
+                      </tbody> 
+                  </table>                
+              </div>
+         </div><br>
+         <div class="row">
+          <div class="col-lg-2 offset-1">
+            Total : &nbsp;&nbsp;&nbsp;{{studservice.total}}
+          </div>
+          <div class="col-lg-3 offset-1">
+            Percentage : &nbsp;&nbsp;&nbsp;{{studservice.percentage | number:'1.0-0'}}
+          </div>
+          <div class="col-lg-2 offset-1">
+            Grade : &nbsp;&nbsp;&nbsp;{{studservice.grade}}
+          </div>
+         </div> 
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" (click)="savestudent()" class="btn btn-primary">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>
+<br>
+  <div class="row">
+      <div class="table-responsive">
+          <table class="table table-bordered" id="datatable" role="grid" >
+              <thead class="bg-primary text-white">
+                  <tr role="row">
+                      <th>S.No</th>
+                      <th>Roll No</th>
+                      <th>Name</th>
+                      <th>Total</th>
+                      <th>Percentage</th>
+                      <th>Grade</th>
+                      <th>Status</th>
+                      <th>Action</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  <tr *ngFor="let item of studentmark">
+                      <td>{{item.sno}}</td>
+                      <td>{{item.roll}}</td>
+                      <td>{{item.name}}</td>
+                      <td>{{item.total}}</td>
+                      <td>{{item.percentage}}</td>
+                      <td>{{item.grade}}</td>
+                      <td>{{item.status}}</td>
+                      <td><button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Edit</button>
+                          </td> 
+                  </tr>
+              </tbody> 
+          </table>                
+      </div>
+ </div>
+
+</body>
+</html>
