@@ -66,6 +66,9 @@ export class StudentdataService {
     };
     this.studentmark.push(newData);
     this.sno++;
+    this.total=0;
+    this.percentage=0;
+    this.grade='-';
   }
 }
                    
