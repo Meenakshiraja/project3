@@ -16,14 +16,14 @@ export class StudentlistComponent implements OnInit {
   }
   
   studentmark:{
-    sno:number,roll:string,name:string,
-    mark:{
-      subject:string,
-      practical:boolean,
-      theory:string,
-      practicalmark:string,
-      subtotal:string
-    } [][]
+    roll:string,name:string,
+    markform:[]
+  //     subject:string,
+  //     practical:boolean,
+  //     theory:string,
+  //     practicalmark:string,
+  //     subtotal:string
+  //   } []
   ,total:string,percentage:string,grade:string,status:string}[]=[];
 
   studentform = this.fb.group
@@ -65,7 +65,6 @@ export class StudentlistComponent implements OnInit {
 
     this.markform.controls[this.i].patchValue({subtotal:subtotal});
     this.i++;
-    console.log(this.studentform.value);
     
     for(let j=0;j<this.markform.length;j++)
     {
@@ -73,7 +72,20 @@ export class StudentlistComponent implements OnInit {
     }
     this.studentform.patchValue({total:String(total)});
     percentage=total/((this.markform.length-1)*100)*100;
-    this.studentform.patchValue({percentage:'percentage'});
+    this.studentform.patchValue({percentage:String(percentage)});
+    if((percentage<=100)&&(percentage>90))
+      grade='A';
+    if((percentage<=90)&&(percentage>80))
+      grade='B';
+    if((percentage<=80)&&(percentage>60))
+      grade='C';
+    if((percentage<=60)&&(percentage>=40))
+      grade='D';
+    if(percentage<40)
+      status='Fail';
+    this.studentform.patchValue({grade:grade});      
+    this.studentform.patchValue({status:status});
+    console.log(this.studentform.value);
   }
 
   delete(index: number) {
@@ -81,42 +93,19 @@ export class StudentlistComponent implements OnInit {
     if (!consent) return;
     (this.studentform.get('markform') as FormArray).removeAt(index);
   }
-
   
-  // saveform()
-  // { 
-   // if(this.studentform.valid)
-  //    {
-  //      alert("Submitted Successfully");
-        //  this.studentmark.push(this.studentform.value);
-      //  ((this.studentform.get('markform'))as FormArray);
-      //  this.studentform.controls["subject"].setValue('');
+  saveform()
+  { 
+   if(this.studentform.valid)
+     {
+       alert("Submitted Successfully");
+         //this.studentmark.push(this.studentform.value);
+         //console.log(this.studentmark);
       //  this.studentform.controls["practical"].setValue(false);
   //      this.show=false;
-  //    }
-  // }
-  // sno=1;
-    
+     }
+  }
   
-  // gettotal()
-  // {
-  //   this.total=0;
-  //   // for(let sub of this.formdata)
-  //   // {
-  //   //     this.total+=Number(sub.theory)+Number(sub.practicalmark);
-  //   // }
-  //   // this.percentage=this.total/(this.formdata.length*100)*100;
-  //   if((this.percentage<=100)&&(this.percentage>90))
-  //     this.grade='A';
-  //   if((this.percentage<=90)&&(this.percentage>80))
-  //     this.grade='B';
-  //   if((this.percentage<=80)&&(this.percentage>60))
-  //     this.grade='C';
-  //   if((this.percentage<=60)&&(this.percentage>=40))
-  //     this.grade='D';
-  //   if(this.percentage<40)
-  //     this.status='Fail';
-  // }
     practicalchecked(e:any)
   {
     if(e.checked==true)
@@ -154,5 +143,9 @@ export class StudentlistComponent implements OnInit {
 
   get percentage(){
     return this.studentform.get('percentage');
+  }
+
+  get grade(){
+    return this.studentform.get('grade');
   }
 }

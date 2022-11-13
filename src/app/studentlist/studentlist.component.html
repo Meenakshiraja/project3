@@ -137,16 +137,17 @@
             <input type="text" class="form-control" formControlName="percentage" value="{{percentage}}"/>
           </div>
         </div>
-          <!-- <div class="col-lg-2 offset-1">
-            Grade : &nbsp;&nbsp;&nbsp;{{grade}}
-          </div> -->
+          <div class="col-lg-2 offset-1">
+            <label>Grade</label>
+            <input type="text" class="form-control" formControlName="grade" value="{{grade}}"/>
+          </div>
         </form>
         </div> 
         
       
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button"  class="btn btn-primary">Save</button>
+          <button type="button" (click)="saveform()"  class="btn btn-primary">Save</button>
         </div>
       </div>
     </div>
@@ -171,8 +172,8 @@
                   </tr>
               </thead>
               <tbody>
-                  <tr *ngFor="let item of studentmark">
-                      <td>{{item.sno}}</td>
+                  <tr *ngFor="let item of studentmark; index as i">
+                      <td>{{i}}</td>
                       <td>{{item.roll}}</td>
                       <td>{{item.name}}</td>
                       <td>{{item.total}}</td>
