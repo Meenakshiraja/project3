@@ -17,7 +17,7 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-            <form [formGroup]="studentform" (ngSubmit)="savestudent()" enctype="multipart/form-data">
+            <form [formGroup]="studentform" enctype="multipart/form-data">
                 <br>
                 <div class="row">
                   <div class="col-lg-5">
@@ -41,20 +41,23 @@
                     </div>
                   </div>
                 </div>
-
                 <br>
-
+                <ng-container formArrayName="markform" *ngFor="let mark of markform.controls; let i=index" >
+                <div [formGroupName]="i">
+                  Mark{{i+1}}<br>
                 <div class="row">
-                    <div class="col-lg-5">
+                    <div class="col-lg-5">      
                     <div class="form-group">
                       <label>Subject Name</label>
                       <input type="text" class="form-control" formControlName="subject" />
-                      <span *ngIf="subject && subject.invalid && subject.touched" class="error">
+                      <!-- <span *ngIf="subject && subject.invalid && subject.touched" class="error">
                         <span *ngIf="subject?.errors?.['required']">Please enter subject name</span>
                         <span *ngIf="subject?.errors?.['pattern']">Subject name must be in alphanumerals</span>
-                    </span> 
+                    </span>  -->
                     </div>
                   </div>
+                
+                
                   <div class="col-lg-5 offset-1"><br>
                     <div class="form-check">
                         <input type="checkbox" class="form-check-input" formControlName="practical" (change)="practicalchecked($event.target)"/>
@@ -67,13 +70,12 @@
                   <div class="row">
                     <div class="col-lg-5">
                     <div class="form-group">
-                      <!-- <div *ngFor="let marks of mark.controls;let i=index"> -->
                       <label>Theory</label>
                       <input type="text" class="form-control" formControlName="theory"/>
-                      <span *ngIf="theory && theory.invalid && theory.touched" class="error">
+                      <!-- <span *ngIf="theory && theory.invalid && theory.touched" class="error">
                         <span *ngIf="theory?.errors?.['required']">Please specify the mark</span>
                         <span *ngIf="theory?.errors?.['max']">Give the mark in correct range</span>
-                      </span>
+                      </span> -->
                     </div>
                   </div>
                   <div class="col-lg-5 offset-1">
@@ -82,18 +84,20 @@
                         <label>Practical</label>
                         <input type="text" class="form-control" formControlName="practicalmark" />
                       </div>
-                      </div>
+                      </div> 
                     </div>
                   </div>
-
+                </div>
+                <br>
+                </ng-container>
                   <br>
                   <div class="row">
                     <div class="col-lg-4 offset-5">
-                    <button type="button" (click)="saveformdata()" class="btn btn-primary">Save</button>          
+                    <button type="button" (click)="saveformdata()" class="btn btn-primary">ADD</button>          
                   </div>
                 </div>
-            </form>
-
+            
+            
             <br><br>
             <div class="row">
               <div class="table-responsive">
@@ -109,13 +113,13 @@
                           </tr>
                       </thead>
                       <tbody>
-                          <tr *ngFor="let student of studservice.formdata;index as i">
+                          <tr *ngFor="let student of markform.value;index as i">
                               <td>{{i+1}}</td>
                               <td>{{student.subject}}</td>
                               <td>{{student.theory}}</td>
                               <td>{{student.practicalmark}}</td>
-                              <td>{{calc(student.theory,student.practicalmark)}}</td>
-                              <td><button  class="btn btn-danger">Delete</button>
+                              <td>{{student.subtotal}}</td>
+                              <td><button (click)="delete(i)"  class="btn btn-danger">Delete</button>
                                   </td> 
                           </tr>
                       </tbody> 
@@ -124,19 +128,25 @@
          </div><br>
          <div class="row">
           <div class="col-lg-2 offset-1">
-            Total : &nbsp;&nbsp;&nbsp;{{studservice.total}}
+            <label>Total</label>
+            <input type="text" class="form-control" formControlName="total" value="{{total}}"/>
           </div>
+        
           <div class="col-lg-3 offset-1">
-            Percentage : &nbsp;&nbsp;&nbsp;{{studservice.percentage | number:'1.0-0'}}
+            <label>Percentage</label>
+            <input type="text" class="form-control" formControlName="percentage" value="{{percentage}}"/>
           </div>
-          <div class="col-lg-2 offset-1">
-            Grade : &nbsp;&nbsp;&nbsp;{{studservice.grade}}
-          </div>
-         </div> 
         </div>
+          <!-- <div class="col-lg-2 offset-1">
+            Grade : &nbsp;&nbsp;&nbsp;{{grade}}
+          </div> -->
+        </form>
+        </div> 
+        
+      
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" (click)="savestudent()" class="btn btn-primary">Save</button>
+          <button type="button"  class="btn btn-primary">Save</button>
         </div>
       </div>
     </div>
